@@ -1,5 +1,6 @@
 import type { CsEvent } from '../types'
 import { formatDateRange, statusLabel, eventStatus } from '../lib/dates'
+import { distanceExplanation, formatDistanceFrom } from '../lib/geo'
 import { cx } from '../lib/cx'
 import {
   Fact,
@@ -15,11 +16,16 @@ import {
 
 type EventDetailProps = {
   event: CsEvent
+  distanceKm: number | null
+  originName: string | null
   onClose: () => void
 }
 
-export function EventDetail({ event, onClose }: EventDetailProps) {
+export function EventDetail({ event, distanceKm, originName, onClose }: EventDetailProps) {
   const status = eventStatus(event)
+  const distanceLabel =
+    distanceKm != null && originName ? formatDistanceFrom(distanceKm, originName) : null
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${event.lat},${event.lng}`)}`
 
   return (
     <article className="detail-card" aria-label={event.name}>
@@ -29,6 +35,11 @@ export function EventDetail({ event, onClose }: EventDetailProps) {
             <IconClock />
             {statusLabel(event)}
           </span>
+          {distanceLabel && (
+            <span className="distance" title={distanceExplanation(originName ?? '')}>
+              {distanceLabel}
+            </span>
+          )}
         </div>
         <h2>{event.name}</h2>
         <div className="facts">
@@ -58,6 +69,9 @@ export function EventDetail({ event, onClose }: EventDetailProps) {
             Get tickets
           </a>
         )}
+        <a className="text-btn" href={mapsUrl} target="_blank" rel="noopener noreferrer">
+          Directions
+        </a>
         <button type="button" className="icon-btn" onClick={onClose} aria-label="Close">
           <IconClose />
         </button>

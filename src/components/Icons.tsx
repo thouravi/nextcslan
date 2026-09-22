@@ -86,6 +86,15 @@ export function IconTicket(props: IconProps) {
   )
 }
 
+export function IconSearch(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="M16 16.5 20 20.5" />
+    </Svg>
+  )
+}
+
 export function IconClose(props: IconProps) {
   return (
     <Svg {...props}>

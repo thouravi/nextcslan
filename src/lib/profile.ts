@@ -1,4 +1,5 @@
 const STORAGE_KEY = 'nextcslan.profile'
+const SKIP_KEY = 'nextcslan.skip'
 
 export type Profile = {
   ign: string
@@ -22,4 +23,16 @@ export function writeProfile(profile: Profile): void {
     STORAGE_KEY,
     JSON.stringify({ ign: profile.ign.trim(), countryCode: profile.countryCode }),
   )
+}
+
+export function readSkipped(): boolean {
+  try {
+    return localStorage.getItem(SKIP_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+export function writeSkipped(): void {
+  localStorage.setItem(SKIP_KEY, '1')
 }

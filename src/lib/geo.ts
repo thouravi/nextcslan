@@ -13,3 +13,12 @@ export function distanceKm(
     Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2
   return 2 * earthKm * Math.asin(Math.min(1, Math.sqrt(h)))
 }
+
+export function formatDistanceFrom(km: number, place: string): string {
+  const rounded = km < 100 ? Math.max(1, Math.round(km)) : Math.round(km / 10) * 10
+  return `≈ ${rounded.toLocaleString('en-US')} km from ${place}`
+}
+
+export function distanceExplanation(place: string): string {
+  return `Straight-line distance from the capital of ${place}. Your profile uses a country, not an exact city.`
+}

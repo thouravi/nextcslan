@@ -5,12 +5,19 @@ import type { Profile } from '../lib/profile'
 export type StageView = 'map' | 'calendar'
 export type MobileView = 'list' | StageView
 
+type NextUp = {
+  label: string
+  aria: string
+}
+
 type HeaderProps = {
   view: StageView
   mobileView: MobileView
   isNarrow: boolean
   profile: Profile | null
+  nextUp: NextUp | null
   onEditProfile: () => void
+  onShowNext: () => void
   onViewChange: (view: StageView) => void
   onMobileViewChange: (view: MobileView) => void
 }
@@ -20,7 +27,9 @@ export function Header({
   mobileView,
   isNarrow,
   profile,
+  nextUp,
   onEditProfile,
+  onShowNext,
   onViewChange,
   onMobileViewChange,
 }: HeaderProps) {
@@ -34,59 +43,76 @@ export function Header({
         </span>
         <div className="brand-text">
           <strong>NextCSLan</strong>
-          <span>When and where the next LANs are</span>
+          {nextUp ? (
+            <button
+              type="button"
+              className="brand-next"
+              onClick={onShowNext}
+              aria-label={nextUp.aria}
+            >
+              {nextUp.label}
+            </button>
+          ) : (
+            <span>When and where the next LANs are</span>
+          )}
         </div>
       </div>
 
       <div className="header-right">
-        {profile && (
-          <button type="button" className="profile-chip" onClick={onEditProfile}>
+        {profile ? (
+          <button
+            type="button"
+            className="profile-chip"
+            onClick={onEditProfile}
+            aria-label={`Edit profile, ${profile.ign}${country ? `, ${country.name}` : ''}`}
+          >
             <span className="profile-ign">{profile.ign}</span>
             {country && <span className="profile-country">{country.name}</span>}
           </button>
-        )}
-
-        {isNarrow ? (
-          <nav className="view-toggle" aria-label="Views">
-            <ToggleButton
-              active={mobileView === 'list'}
-              onClick={() => onMobileViewChange('list')}
-            >
-              Events
-            </ToggleButton>
-            <ToggleButton
-              active={mobileView === 'map'}
-              onClick={() => {
-                onMobileViewChange('map')
-                onViewChange('map')
-              }}
-            >
-              Map
-            </ToggleButton>
-            <ToggleButton
-              active={mobileView === 'calendar'}
-              onClick={() => {
-                onMobileViewChange('calendar')
-                onViewChange('calendar')
-              }}
-            >
-              Calendar
-            </ToggleButton>
-          </nav>
         ) : (
-          <nav className="view-toggle" aria-label="Views">
-            <ToggleButton active={view === 'map'} onClick={() => onViewChange('map')}>
-              Map
-            </ToggleButton>
-            <ToggleButton
-              active={view === 'calendar'}
-              onClick={() => onViewChange('calendar')}
-            >
-              Calendar
-            </ToggleButton>
-          </nav>
+          <button type="button" className="text-btn" onClick={onEditProfile}>
+            Add location
+          </button>
         )}
       </div>
+
+      {isNarrow ? (
+        <nav className="view-toggle" aria-label="Views">
+          <ToggleButton
+            active={mobileView === 'list'}
+            onClick={() => onMobileViewChange('list')}
+          >
+            Events
+          </ToggleButton>
+          <ToggleButton
+            active={mobileView === 'map'}
+            onClick={() => {
+              onMobileViewChange('map')
+              onViewChange('map')
+            }}
+          >
+            Map
+          </ToggleButton>
+          <ToggleButton
+            active={mobileView === 'calendar'}
+            onClick={() => {
+              onMobileViewChange('calendar')
+              onViewChange('calendar')
+            }}
+          >
+            Calendar
+          </ToggleButton>
+        </nav>
+      ) : (
+        <nav className="view-toggle" aria-label="Views">
+          <ToggleButton active={view === 'map'} onClick={() => onViewChange('map')}>
+            Map
+          </ToggleButton>
+          <ToggleButton active={view === 'calendar'} onClick={() => onViewChange('calendar')}>
+            Calendar
+          </ToggleButton>
+        </nav>
+      )}
     </header>
   )
 }

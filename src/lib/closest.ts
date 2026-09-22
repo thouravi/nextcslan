@@ -10,9 +10,22 @@ export function closestUpcomingEvent(
   const origin = countryByCode(countryCode)
   const upcoming = events.filter((event) => eventStatus(event) !== 'past')
   if (upcoming.length === 0) return null
-  if (!origin) return upcoming.slice().sort((a, b) => a.startDate.localeCompare(b.startDate))[0]
+  if (!origin) {
+    return upcoming.reduce((soonest, event) =>
+      event.startDate < soonest.startDate ? event : soonest,
+    )
+  }
 
-  return upcoming.reduce((best, event) =>
-    distanceKm(origin, event) < distanceKm(origin, best) ? event : best,
-  )
+  let best = upcoming[0]
+  let bestKm = distanceKm(origin, best)
+  for (const event of upcoming.slice(1)) {
+    const km = distanceKm(origin, event)
+    const closer = km < bestKm - 0.5
+    const tieSooner = Math.abs(km - bestKm) <= 0.5 && event.startDate < best.startDate
+    if (closer || tieSooner) {
+      best = event
+      bestKm = km
+    }
+  }
+  return best
 }
