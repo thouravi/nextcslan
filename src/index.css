@@ -644,9 +644,40 @@ p {
   }
 }
 
+.leaflet-overlay-pane .flight-route,
+.leaflet-overlay-pane .flight-route-glow,
+.flight-plane {
+  pointer-events: none;
+}
+
+.leaflet-overlay-pane .flight-route {
+  stroke-dasharray: 1.5 9;
+  stroke-linecap: round;
+  animation: flight-dash 1.15s linear infinite;
+}
+
+@keyframes flight-dash {
+  to {
+    stroke-dashoffset: -21;
+  }
+}
+
+.flight-plane {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.flight-plane span {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.65));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .you-dot-pulse,
-  .detail-card {
+  .detail-card,
+  .leaflet-overlay-pane .flight-route {
     animation: none;
   }
 }
