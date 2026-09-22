@@ -41,7 +41,7 @@ export function flightPath(
   if (distance < 20) return { segments: [], plane: null }
 
   const delta = distance / EARTH_KM
-  const steps = Math.round(Math.min(72, Math.max(28, distance / 120)))
+  const steps = 48
   const bulgeKm = Math.min(1800, distance * (distance < 700 ? 0.34 : 0.22))
   const start = toVector(from.lat, from.lng)
   const end = toVector(to.lat, to.lng)

@@ -193,7 +193,6 @@ export default function App() {
           {selected && stageView !== 'list' && !editingProfile && (
             <div className="detail-dock">
               <EventDetail
-                key={selected.id}
                 event={selected}
                 distanceKm={selectedDistance}
                 originName={you?.countryName ?? null}
